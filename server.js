@@ -80,12 +80,24 @@ const connectDB = async () => {
 connectDB();
 
 // Middleware
-app.use(cors({ 
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://vattaram-8cn5.vercel.app/', 'https://vattaram-backend.onrender.com'] 
-    : 'http://localhost:3000', 
-  credentials: true 
+// In your backend server file
+app.use(cors({
+  origin: (origin, callback) => {
+    console.log('Request Origin:', origin); // Log to debug
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'https://vattaram-8cn5.vercel.app',
+      'https://vattaram-backend.onrender.com'
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
 }));
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(bodyParser.json());
