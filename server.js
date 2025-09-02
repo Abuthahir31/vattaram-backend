@@ -36,20 +36,18 @@ const connectDB = async () => {
     }
 
     console.log('Attempting to connect to MongoDB...');
-    
-    // Connection options
+
+    // Connection options (remove deprecated options)
     const options = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds
       socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
     };
 
     // Establish connection
     await mongoose.connect(process.env.MONGO_URI, options);
-    
+
     console.log('MongoDB connected successfully');
-    
+
     // Listen to connection events
     mongoose.connection.on('error', (err) => {
       console.error('MongoDB connection error:', err);
@@ -68,7 +66,7 @@ const connectDB = async () => {
 
   } catch (error) {
     console.error('MongoDB connection failed:', error.message);
-    
+
     // In production, exit process; in development, continue
     if (process.env.NODE_ENV === 'production') {
       process.exit(1);
